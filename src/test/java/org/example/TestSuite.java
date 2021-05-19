@@ -1,6 +1,12 @@
 package org.example;
 
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.testng.annotations.Test;
+
+import java.util.List;
+
+import static org.testng.Assert.assertEquals;
 
 public class TestSuite extends BaseTest{
     //object create for Homepage
@@ -36,11 +42,16 @@ public class TestSuite extends BaseTest{
         //call method from AssertPage class
         assertPage.registration_completed_Assert();
 
+
     }
 @Test
     public void user_Should_Be_Able_To_Change_The_Currency(){
     //call method from Homepage class
-    homePage.clickOnCurrency();
+    homePage.selectEuroCurrency();
+    assertPage.verifyCurrencySymbolInEachPrice();
+
+    homePage.selectUSDollarCurrency();
+    assertPage.verifyCurrencySymbolInEachPrice();
     }
 @Test
     public void user_Able_To_See_Search_Nike_Product(){
@@ -49,7 +60,7 @@ public class TestSuite extends BaseTest{
 
     //call method from Search_Nike class
         search_nike.search_Nike_Product();
-//        assertPage.nike_Product_Assert();
+
 
 }
     @Test
@@ -61,7 +72,8 @@ public class TestSuite extends BaseTest{
         computerCategory.click_on_Software();
 
         //call method from SoftwarePage class
-        softwarePage.software_Add_To_Cart();
+       softwarePage.verify_Add_To_Cart_Button_Present();
+
 
     }
 @Test

@@ -2,20 +2,27 @@ package org.example;
 
 import org.openqa.selenium.By;
 
+import java.sql.Timestamp;
+
 public class Online_Store_Page extends Utils{
+    LoadProperty loadProperty = new LoadProperty();
+    private By _titleType=By.xpath("(//input[@type=\"text\"])[2]");
+    private By _commentType=By.xpath("//textarea[@class=\"enter-comment-text\"]");
+    private By _newComment=By.xpath("(//button[@type=\"submit\"])[2]");
+    private Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 
     public void Type_Title_And_Comment(){
       //wait before next action
-      // waitForClickable(By.xpath("//input[@class=\"enter-comment-title\"]"),5000);
+       //waitForClickable(_titleType,5000);
         //enter title
         thread_Sleep();
-        enterText(By.xpath("(//input[@type=\"text\"])[2]"),"Hello");
+        enterText(_titleType,loadProperty.getProperty("TitleName")+timestamp.getTime());
         //wait before next action
-        waitForClickable(By.xpath("//textarea[@class=\"enter-comment-text\"]"),5000);
+        waitForClickable(_commentType,5000);
         //enter comment
-        enterText(By.xpath("//textarea[@class=\"enter-comment-text\"]"),"This my first project");
+        enterText(_commentType,loadProperty.getProperty("Comment_Give"));
         //click on new comment
-        clickOnElement(By.xpath("(//button[@type=\"submit\"])[2]"));
+        clickOnElement(_newComment);
 
 
 

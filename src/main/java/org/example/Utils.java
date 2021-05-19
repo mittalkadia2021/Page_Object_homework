@@ -14,7 +14,15 @@ public class Utils extends BasePage {
         WebDriverWait wait = new WebDriverWait(driver, time);
         wait.until(ExpectedConditions.elementToBeClickable(by));
     }
-    public  static void thread_Sleep(){
+
+    public static void waitForElementToBeSelected(By by, int time) {
+        WebDriverWait wait = new WebDriverWait(driver, time);//variable assigned
+        wait.until(ExpectedConditions.elementToBeSelected(by));//expected condition for the wait
+
+    }
+
+
+    public static void thread_Sleep() {
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
@@ -33,9 +41,10 @@ public class Utils extends BasePage {
     }
 
     //create selectByVisibleText reusable method
-    public static void selectFromDropdownByVisibleText(By by, String text) {
+    public static String selectFromDropdownByVisibleText(By by, String text) {
         Select select = new Select(driver.findElement(by));
         select.selectByVisibleText(text);
+        return text;
     }
 
     //create selectByIndex reusable method
@@ -55,20 +64,50 @@ public class Utils extends BasePage {
     public static String timeStamp(By by) {
         return driver.findElement(by).getText();
     }
-//create list reusable method
-    public static void compare_Product(By by) {
+
+    //create list reusable method
+    public static String list_Of_Product(By by) {
 
         List<WebElement> compareProductList = driver.findElements(by);
         for (WebElement element : compareProductList) {
             System.out.println(element.getText());
         }
+        return null;
     }
-//create get text reusable method
+
+    //create get text reusable method
     public static String get_Text_From_Element(By by) {
         return driver.findElement(by).getText();
 
     }
+
+    public static String getSelectedTextFromDropDown(By by) {
+        Select select = new Select(driver.findElement(by));
+        return select.getFirstSelectedOption().getText();
+
+    }
+
+    public static String getCurrencySymbol(String currencyName) {
+
+        String currencySymbol = null;
+        switch (currencyName) {
+            case "US Dollar":
+                currencySymbol = "$";
+                break;
+            case "Euro":
+                currencySymbol = "€";
+                break;
+            default:
+                System.out.println("Currency is not available ");
+        }
+        return currencySymbol;
+
+    }
+
+
+
 }
+
 
 
 

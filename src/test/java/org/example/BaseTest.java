@@ -12,7 +12,7 @@ public class BaseTest extends Utils {
     public void openBrowser() {
         //setting up chromedriver path from your system
         System.setProperty("webdriver.chrome.driver",
-                "src\\test\\Resorces\\Browser\\chromedriver.exe");
+                "src\\test\\resorces\\BrowserDriver\\chromedriver.exe");
         //creating object for driver
         driver = new ChromeDriver();
         //maximize the browser window
