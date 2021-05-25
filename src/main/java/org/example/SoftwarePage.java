@@ -10,19 +10,23 @@ import java.util.List;
 import static org.testng.Assert.assertEquals;
 
 public class SoftwarePage extends Utils {
-  private By _itemBoxes=By.className("item-box");
+  private By _itemBoxes=By.xpath("//div[contains(@class, 'item-box')]");
   private By _addCartButton=By.cssSelector("button.button-2.product-box-add-to-cart-button");
-   // private By _addCartButton=By.cssSelector("html>body>div:nth-of-type(7)");
-  private By _productName=By.cssSelector("h2.product-title > a");
+
+  private By _productName=By.cssSelector("h2.product-title ");
 
 SoftAssert softAssert=new SoftAssert();
     public void verify_Add_To_Cart_Button_Present(){
-
+        //finding number of items
         List<WebElement> webElementList=driver.findElements(_itemBoxes);
-
+      thread_Sleep();
         int count=0, noButton=0;
-        for (WebElement element : webElementList){
+        //print output
+        System.out.println("Total Product = " +" "+webElementList.size());
 
+        //list of items
+        for (WebElement element : webElementList){
+            //applying condition
            if (element.findElements(_addCartButton).size() == 1)
            {
                count++;
@@ -33,9 +37,12 @@ SoftAssert softAssert=new SoftAssert();
                System.out.println(element.findElement(_productName).getText()+ ">>>>> NO ADD TO CART BUTTON");
             }
         }
-     assertEquals( count, webElementList.size(),"Add to cart button should be"+ webElementList.size()+"but it is"+count+" ");
-      System.out.println("Add to cart button present in each product on this page");
-        //softAssert.assertAll();
+        //verify total add to cart button
+    assertEquals( count, webElementList.size(),"Add to cart button should be"+ webElementList.size()+"but it is"+count+" ");
+
+        //print output
+      System.out.println("Add_To_Cart_SOut_Message");
+
     }
 
 }

@@ -12,8 +12,6 @@ public class LoadProperty {
     static String fileLocation = "src/test/TestData/config.properties";
 
     public String getProperty(String keyName) {
-
-
         prop = new Properties();
         try {
             input = new FileInputStream(fileLocation );

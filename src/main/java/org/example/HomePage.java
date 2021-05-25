@@ -3,64 +3,60 @@ package org.example;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.testng.Assert;
+import org.testng.asserts.SoftAssert;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class HomePage extends Utils {
     LoadProperty loadProperty = new LoadProperty();
-    private By _register = By.xpath("//a[@class=\"ico-register\"]");
-    private By _computer = By.xpath("(//a[@href=\"/computers\"])[1]");
-    private By _searchItem = By.xpath("//input[@type=\"text\"]");
-    private By _searchButton = By.xpath("//button[@type=\"submit\"]");
+    SoftAssert softAssert = new SoftAssert();
+    private By _register = By.xpath("//a[contains(text(),'Register')]");
+    private By _selectCurrency = By.cssSelector("select#customerCurrency");
+    private By _priceList = By.cssSelector("span.price.actual-price");
+    private By _selectEuro = By.cssSelector("select[id$='Currency']");
+    private By _searchItem = By.xpath("//input[starts-with(@class, 'search-box')]");
+    private By _searchButton = By.cssSelector("button.button-1.search-box-button");
+    private By _computer = By.xpath("(//a[contains(@href, 'computer')])[1]");
     private By _onlineStore = By.xpath("(//a[@class=\"news-title\"])[1]");
-    private By _euroCurrency=By.xpath("//select[@id=\"customerCurrency\"]");
-    private By _usDollarCurrency=By.xpath("//select[@id=\"customerCurrency\"]");
+    private By _click_SearchButton =By.cssSelector("button.button-1.search-box-button");
+    private By _click_On_Facebook=By.xpath("//a[contains(text(),'Facebook')]");
 
 
 
     public void clickOnRegisterButton() {
-        //click on register button
-        // driver.manage().timeouts().implicitlyWait(1000, TimeUnit.SECONDS);
-        waitForClickable(_register, 15000);
+        //wait for click on register button
+        waitForClickable(_register, 10);
+        //Click on register
         clickOnElement(_register);
+    }
 
+    public void verify_Currency_Symbol_In_Each_Price(){
+    //getting name of currency selected
+      String currencyNameSelected =getSelectedTextFromDropDown(_selectCurrency);
+      //getting currency symbol
+      String expectedCurrencySymbol = getCurrencySymbol(currencyNameSelected);
+      //list of product price
+      List<WebElement> priceList = driver.findElements(_priceList);
+      //item list
+      for (WebElement element : priceList)
+      {
+          String actualCurrencySymbol = element.getText().substring(0,1);
+          //asserting actual currency symbol with expected currency symbol
+          Assert.assertEquals(actualCurrencySymbol,expectedCurrencySymbol,"Actual currency symbol not matching with expected currency symbol");
+      }
+      //printing output
+      System.out.println("Currency Verified successfully:" + currencyNameSelected +" as " + expectedCurrencySymbol);
+  }
+
+    public void click_On_Currency_Field()
+    {   //selecting currency
+        selectFromDropdownByVisibleText(_selectEuro,loadProperty.getProperty("selectCurrency"));
 
     }
 
-    public  void selectEuroCurrency(){
-       // click on Euro currency
-        selectFromDropdownByIndex(_euroCurrency,1);
 
-    }
-    public  void selectUSDollarCurrency(){
-        // click on USDollar currency
-        selectFromDropdownByIndex(_usDollarCurrency, 0);
-
-    }
-
-
-
-
-//        //print Euro currency
-//        System.out.println("Euro Currency");
-//        //click on Euro currency
-//        selectFromDropdownByIndex(By.xpath("//select[@id=\"customerCurrency\"]"), 1);
-//        //print name all Euro currency symbol product0
-//        compare_Product(By.xpath("//div[@class=\"item-box\"]//span[@class=\"price actual-price\"]"));
-//
-//        //print US dollar currency
-//        System.out.println("US dollar Currency");
-//        //click on US dollar
-//        selectFromDropdownByIndex(By.xpath("//select[@name=\"customerCurrency\"]"), 0);
-//        //print name all US dollar symbol product
-//        compare_Product(By.xpath("//div[@class=\"item-box\"]//span[@class=\"price actual-price\"]"));
-    //}
-
-
-
-
-    public void search_Product() {
+    public void search_Nike_Product() {
         //enter text Nike on search bar
         enterText(_searchItem, loadProperty.getProperty("SearchItemName"));
         //click on search button
@@ -72,14 +68,22 @@ public class HomePage extends Utils {
         //click on computer category
         clickOnElement(_computer);
         //wait before next action
-        waitForClickable(_computer, 50000);
+        waitForClickable(_computer, 20);
     }
 
-    public void click_on_Online_Store_Is_Open() {
+    public void click_On_Online_Store_Is_Open() {
         //click on online store is open
-        //waitForClickable(_onlineStore,1000);
         clickOnElement(_onlineStore);
     }
+    public void click_On_Search_Button(){
+        //click on search button
+        clickOnElement(_click_SearchButton);
+    }
+
+     public void click_On_Facebook(){
+        //click on facebook
+        clickOnElement(_click_On_Facebook);
+     }
 }
 
 

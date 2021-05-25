@@ -1,27 +1,35 @@
 package org.example;
 
+import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.By;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import javax.imageio.IIOException;
+import java.io.File;
+import java.io.IOException;
+import java.io.InvalidObjectException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class Utils extends BasePage {
-    //create wait reusable method
+    //method for webDriver wait
     public static void waitForClickable(By by, int time) {
         WebDriverWait wait = new WebDriverWait(driver, time);
         wait.until(ExpectedConditions.elementToBeClickable(by));
     }
-
+     //method for wait webDriver selected
     public static void waitForElementToBeSelected(By by, int time) {
         WebDriverWait wait = new WebDriverWait(driver, time);//variable assigned
         wait.until(ExpectedConditions.elementToBeSelected(by));//expected condition for the wait
 
     }
-
-
+     //method for wait webDriver use thread sleep
     public static void thread_Sleep() {
         try {
             Thread.sleep(1000);
@@ -30,64 +38,62 @@ public class Utils extends BasePage {
         }
     }
 
-    //create sendKey reusable method
+    // method for enter text
     public static void enterText(By by, String text) {
         driver.findElement(by).sendKeys(text);
     }
 
-    //create  click reusable method
+    // method for click on element
     public static void clickOnElement(By by) {
         driver.findElement(by).click();
     }
 
-    //create selectByVisibleText reusable method
-    public static String selectFromDropdownByVisibleText(By by, String text) {
+    //method for select from dropDown by text
+    public static void selectFromDropdownByVisibleText(By by, String text) {
         Select select = new Select(driver.findElement(by));
         select.selectByVisibleText(text);
-        return text;
     }
 
-    //create selectByIndex reusable method
+    //method for select from dropDown by index
     public static void selectFromDropdownByIndex(By by, int index) {
         Select select = new Select(driver.findElement(by));
         select.selectByIndex(index);
-
     }
 
-    //create selectByValue reusable method
+    //method for select from dropDown by
     public static void selectFromDropdownByValue(By by, String text) {
         Select select = new Select(driver.findElement(by));
         select.selectByValue(text);
     }
 
-    //create timestamp reusable method
+    //method for timestamp
     public static String timeStamp(By by) {
         return driver.findElement(by).getText();
     }
 
-    //create list reusable method
-    public static String list_Of_Product(By by) {
-
+    //webElement list method
+    public static void list_Of_Product(By by)
+    {
         List<WebElement> compareProductList = driver.findElements(by);
-        for (WebElement element : compareProductList) {
+        for (WebElement element : compareProductList)
+        {
             System.out.println(element.getText());
         }
-        return null;
     }
 
-    //create get text reusable method
+    //method to  get text
     public static String get_Text_From_Element(By by) {
         return driver.findElement(by).getText();
-
     }
 
+    //method get selected text from dropDown
     public static String getSelectedTextFromDropDown(By by) {
         Select select = new Select(driver.findElement(by));
         return select.getFirstSelectedOption().getText();
 
     }
-
-    public static String getCurrencySymbol(String currencyName) {
+    //method for currency symbol
+    public String getCurrencySymbol(String currencyName) {
 
         String currencySymbol = null;
         switch (currencyName) {
@@ -101,11 +107,25 @@ public class Utils extends BasePage {
                 System.out.println("Currency is not available ");
         }
         return currencySymbol;
-
     }
 
+    //method for dateStamp
+      public static String dateStamp(){
+      SimpleDateFormat format =new SimpleDateFormat("ddMMyyyyHHmmss");
+      return format.format(new Date());
+
+  }
+  //method for capturing screenshot
+   public static void captureScreenshot(String screenshotName){
+       File screenshotFile =((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
+       try {
+           FileUtils.copyFile(screenshotFile, new File("src\\test\\resources\\Screenshot" + screenshotName + dateStamp() + ".jpg"));
+       }catch (IOException e){
+           e.printStackTrace();
+       }
 
 
+   }
 }
 
 

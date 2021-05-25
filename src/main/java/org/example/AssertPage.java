@@ -1,5 +1,6 @@
 package org.example;
 
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.testng.Assert;
@@ -7,60 +8,78 @@ import org.testng.asserts.SoftAssert;
 
 import java.sql.Timestamp;
 import java.util.List;
-import java.util.Scanner;
+
 
 public class AssertPage extends Utils {
+    LoadProperty loadProperty = new LoadProperty();
     private Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-    private By _registrationConfirmMessage = By.xpath("//div[@class='result']");
-    private By _commentAddMessage = By.xpath("//div[@class='result']");
-    private By _commentPresentOnDisplay = By.xpath("//div[@class=\"comment-content\"]");
-    private By _commentLast = By.xpath("//div[@class=\"comment-list\"]");
-    private By _customer_Currency = By.id("customerCurrency");
-    private By _currency_Price = By.xpath("//span[@class=\"price actual-price\"]");
-    private By _productTitle = By.xpath("//h2[@class=\"product-title\"]");
-    SoftAssert softAssert=new SoftAssert();
+    private By _register_actualResult = By.xpath("//div[contains(text(),'Your registration completed')]");
+    private By _comment_Successfully_Added = By.xpath("//div[contains(text(),'News comment is successfully added.')]");
+    private  By _commentsBox = By.cssSelector("div.comments");
+    private By _comment_Whole_Box=By.cssSelector("div.comment.news-comment");
 
-    public void registration_completed_Assert() {
-        Assert.assertEquals(get_Text_From_Element(_registrationConfirmMessage), "Your registration completed", "Register not complete");
-        System.out.println("Your registration completed");
+    String commentText = loadProperty.getProperty("Comment_Give") + dateStamp();
+
+
+    public void registration_Completed_Assert() {
+        //verify register successfully message
+        Assert.assertEquals(get_Text_From_Element(_register_actualResult), "Your registration completed", "Registration is not complete");
+
+        //print output
+        System.out.println(loadProperty.getProperty("RegisterPassAssertMessage"));
     }
 
-    public void verifyCurrencySymbolInEachPrice() {
+    public void verify_Comment_Successfully_Added()
+    {
+        //to verify comment added successfully
+        Assert.assertEquals(get_Text_From_Element(_comment_Successfully_Added), "News comment is successfully added.", "Comment not added successfully");
 
-        String currencyNameSelected = getSelectedTextFromDropDown(_customer_Currency);
-        String expectedCurrencySymbol = getCurrencySymbol(currencyNameSelected);
-
-        List<WebElement> priceList = driver.findElements(_currency_Price);
-        for (WebElement element : priceList) {
-            Assert.assertTrue(element.getText().contains(expectedCurrencySymbol));
-            String priceSymbolActual = element.getText().substring(0, 1);
-            Assert.assertEquals(priceSymbolActual, expectedCurrencySymbol);
-
-        }
-
-        System.out.println("Currency Verified successfully  : " + currencyNameSelected + "as" + expectedCurrencySymbol);
+        //print output
+        System.out.println(loadProperty.getProperty("Comment_Added_Successfully"));
     }
 
+    public void verify_Comment_Present_In_Comment_List()
+    {
+        //verify Comment Present In Comment List
+        Assert.assertTrue(get_Text_From_Element(_commentsBox).contains(commentText),"newly added comment is NOt present in comment list");
 
-    public void verifyCommentAddSuccessfully() {
-
-        Assert.assertEquals(get_Text_From_Element(_commentAddMessage), "News comment is successfully added.", "Comment is not add");
-        System.out.println("News comment is successfully added.");
+        //print output
+        System.out.println(loadProperty.getProperty("Comment_Present_In_List"));
     }
 
-    public void comment_Present_Display() {
-        waitForClickable(_commentPresentOnDisplay, 15000);
-        boolean productDisplay = driver.findElement(_commentPresentOnDisplay).isDisplayed();
-        Assert.assertTrue(productDisplay, "Comments are not display");
-        System.out.println("Comments are display");
+    public void verify_Your_Comment_Last_In_List()
+    {
+        //finding total comments
+        List<WebElement> commentList = driver.findElements(_comment_Whole_Box);
 
+        //total comments
+        int numberOfComments = commentList.size();
+
+        //finding last comment index
+        int lastCommentIndex = numberOfComments-1;
+
+        //get text of whole last comment
+        String lastCommentActualText = commentList.get(lastCommentIndex).getText();
+
+        //verifying last comments contains text of added comment
+        Assert.assertTrue(lastCommentActualText.contains(commentText),"Added comment is NOT at last in comment list");
+
+        //print output
+        System.out.println(loadProperty.getProperty("Comment_Last_In_LIst"));
     }
 
-    public void your_Comments_At_Last() {
+    public void alert_Message_Verification() {
+        Alert confirmation = driver.switchTo().alert();
+        String alertText = confirmation.getText();
 
-        boolean commentLast = driver.findElement(_commentLast).isDisplayed();
-        Assert.assertTrue(commentLast, "Your comments are not last");
-        System.out.println("Your comments at last");
+        //verify alert message
+        Assert.assertEquals(alertText, "Please enter some search keyword", "It is not match");
+
+        //print output
+        System.out.println(loadProperty.getProperty("Verify_Alert_Message"));
+
+        // To click on the 'OK' button of the alert.
+        driver.switchTo().alert().accept();
 
     }
 }
